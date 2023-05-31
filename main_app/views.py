@@ -1,10 +1,5 @@
 from django.shortcuts import render
-
-# Temporary Data until implementing models
-penguins = [
-    {'name': 'Nora', 'species': 'Adélie', 'description': 'cute and small', 'age': 3},
-    {'name': 'Walter', 'species': 'Emperor', 'description': 'a little tubby but still cute', 'age': 4},
-]
+from .models import Penguin
 
 # Create your views here.
 def home(request):
@@ -14,6 +9,13 @@ def about(request):
     return render(request, 'about.html')
 
 def penguins_index(request):
+    penguins = Penguin.objects.all()
     return render(request, 'penguins/index.html', {
         'penguins': penguins
+    })
+
+def penguins_detail(request, penguin_id):
+    penguin = Penguin.objects.get(id=penguin_id)
+    return render(request, 'penguins/detail.html', {
+        'penguin': penguin
     })
