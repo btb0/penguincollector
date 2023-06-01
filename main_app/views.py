@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from .models import Penguin
 
 # Create your views here.
@@ -21,6 +21,17 @@ def penguins_detail(request, penguin_id):
         'penguin': penguin
     })
 
+# ====Class Based Views====
+
 class PenguinCreate(CreateView):
     model = Penguin
     fields = '__all__'
+
+class PenguinUpdate(UpdateView):
+    model = Penguin
+    # Not allowed to update the name
+    fields = ['species', 'description', 'age']
+
+class PenguinDelete(DeleteView):
+    model = Penguin
+    success_url = '/penguins'

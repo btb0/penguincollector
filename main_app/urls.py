@@ -7,4 +7,6 @@ urlpatterns = [
     path('penguins/', views.penguins_index, name='penguins_index'),
     path('penguins/<int:penguin_id>/', views.penguins_detail, name='penguins_detail'),
     path('penguins/create/', views.PenguinCreate.as_view(), name='penguins_create'),
+    path('penguins/<int:pk>/update/', views.PenguinUpdate.as_view(), name='penguins_update'),
+    path('penguins/<int:pk>/delete/', views.PenguinDelete.as_view(), name='penguins_delete'),
 ]
