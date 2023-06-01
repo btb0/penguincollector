@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.views.generic.edit import CreateView
 from .models import Penguin
 
 # Create your views here.
@@ -19,3 +20,7 @@ def penguins_detail(request, penguin_id):
     return render(request, 'penguins/detail.html', {
         'penguin': penguin
     })
+
+class PenguinCreate(CreateView):
+    model = Penguin
+    fields = '__all__'

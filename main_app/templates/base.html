@@ -15,11 +15,12 @@
     <nav>
       <div class="nav-wrapper indigo lighten-4">
         <ul>
-          <li><a href="/" class="left brand-logo">&nbsp;&nbsp;Penguin Collector</a></li>
+          <li><a href="{% url 'home' %}" class="left brand-logo">&nbsp;&nbsp;Penguin Collector</a></li>
         </ul>
         <ul class="right">
-          <li><a href="/about">About</a></li>
-          <li><a href="/penguins">All Penguins</a></li>
+          <li><a href="{% url 'about' %}">About</a></li>
+          <li><a href="{% url 'penguins_create' %}">Add a Penguin</a></li>
+          <li><a href="{% url 'penguins_index' %}">All Penguins</a></li>
         </ul>
       </div>
     </nav>

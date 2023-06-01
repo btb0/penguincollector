@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>Add Penguin</h1>
+<!-- Form will post to same url used to display -->
+<form action="" method="POST">
+    <!-- Required for Security purposes -->
+    {% csrf_token %}
+    <table>
+        {{ form.as_table }}
+    </table>
+    <input type="submit" value="Submit" class="btn">
+</form>
+
+{% endblock %}
