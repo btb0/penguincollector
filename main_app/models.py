@@ -45,3 +45,7 @@ class Feeding(models.Model):
 
     def __str__(self):
         return f'{self.get_meal_display()} was {self.get_food_display()} on {self.date}'
+    
+    class Meta:
+        # Sort Feedings by date (descending order)
+        ordering = ['-date']

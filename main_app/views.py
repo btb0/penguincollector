@@ -1,6 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from .models import Penguin
+from .forms import FeedingForm
 
 # Create your views here.
 def home(request):
@@ -17,9 +18,20 @@ def penguins_index(request):
 
 def penguins_detail(request, penguin_id):
     penguin = Penguin.objects.get(id=penguin_id)
+    # instantiates FeedingForm to be rendered in the detail template
+    feeding_form = FeedingForm()
     return render(request, 'penguins/detail.html', {
-        'penguin': penguin
+        'penguin': penguin,
+        'feeding_form': feeding_form
     })
+
+def add_feeding(request, penguin_id):
+    form = FeedingForm(request.POST)
+    if form.is_valid():
+        new_feeding = form.save(commit=False)
+        new_feeding.penguin_id = penguin_id
+        new_feeding.save()
+    return redirect('penguins_detail', penguin_id=penguin_id)
 
 # ====Class Based Views====
 
