@@ -30,6 +30,17 @@
             {{ feeding_form.as_p }}
             <input type="submit" value="Add Feeding" class="btn">
         </form>
+        <br>
+        <!-- Is Penguin Hungry? Card -->
+        {% if penguin.fed_for_today %}
+            <div class="card-panel teal-text center-align">
+                {{ penguin.name }} has been fed all meals for today
+            </div>
+        {% else %}
+            <div class="card-panel red-text center-align">
+                {{ penguin.name }} is hungry!
+            </div>
+        {% endif %}
         <table class="striped">
             <thead>
                 <tr>
