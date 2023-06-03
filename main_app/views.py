@@ -3,6 +3,8 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView, DetailView
 from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.decorators import login_required # Authorization for view functions
+from django.contrib.auth.mixins import LoginRequiredMixin # Authorization for class based views
 from .models import Penguin, Hat
 from .forms import FeedingForm
 
@@ -13,12 +15,17 @@ def home(request):
 def about(request):
     return render(request, 'about.html')
 
+@login_required
 def penguins_index(request):
-    penguins = Penguin.objects.all()
+    # Retrieves ALL penguins
+    # penguins = Penguin.objects.all()
+    # Retrieves USER'S penguins
+    penguins = Penguin.objects.filter(user=request.user)
     return render(request, 'penguins/index.html', {
         'penguins': penguins
     })
 
+@login_required
 def penguins_detail(request, penguin_id):
     penguin = Penguin.objects.get(id=penguin_id)
     # list of all hats penguin has
@@ -33,6 +40,7 @@ def penguins_detail(request, penguin_id):
         'hats': avail_hats
     })
 
+@login_required
 def add_feeding(request, penguin_id):
     form = FeedingForm(request.POST)
     if form.is_valid():
@@ -43,9 +51,9 @@ def add_feeding(request, penguin_id):
 
 # ==== Penguin Class Based Views====
 
-class PenguinCreate(CreateView):
+class PenguinCreate(LoginRequiredMixin, CreateView):
     model = Penguin
-    fields = '__all__'
+    fields = ['name', 'species', 'description', 'age']
 
     # overriding inherited method (called when a valid penguin form is submitted)
     def form_valid(self, form):
@@ -54,42 +62,42 @@ class PenguinCreate(CreateView):
         form.instance.user = self.request.user 
         return super().form_valid(form)
 
-class PenguinUpdate(UpdateView):
+class PenguinUpdate(LoginRequiredMixin, UpdateView):
     model = Penguin
     # Not allowed to update the name
     fields = ['species', 'description', 'age']
 
-class PenguinDelete(DeleteView):
+class PenguinDelete(LoginRequiredMixin, DeleteView):
     model = Penguin
     success_url = '/penguins'
 
 
 # HATS CBVs
-class HatList(ListView):
+class HatList(LoginRequiredMixin, ListView):
     model = Hat
 
-class HatCreate(CreateView):
+class HatCreate(LoginRequiredMixin, CreateView):
     model = Hat
     fields = '__all__'
 
-class HatDetail(DetailView):
+class HatDetail(LoginRequiredMixin, DetailView):
     model = Hat
 
-class HatUpdate(UpdateView):
+class HatUpdate(LoginRequiredMixin, UpdateView):
     model = Hat
     fields = ['type', 'color']
 
-class HatDelete(DeleteView):
+class HatDelete(LoginRequiredMixin, DeleteView):
     model = Hat
     success_url = '/hats'
 
-
+@login_required
 def assoc_hat(request, penguin_id, hat_id):
     # Add hat to penguins collection
     Penguin.objects.get(id=penguin_id).hats.add(hat_id)
     return redirect('penguins_detail', penguin_id=penguin_id)
 
-
+@login_required
 def unassoc_hat(request, penguin_id, hat_id):
     # remove hat from penguins collection
     Penguin.objects.get(id=penguin_id).hats.remove(hat_id)
