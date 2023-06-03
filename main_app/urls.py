@@ -13,4 +13,6 @@ urlpatterns = [
     path('hats/', views.HatList.as_view(), name='hats_index'),
     path('hats/create/', views.HatCreate.as_view(), name='hats_create'),
     path('hats/<int:pk>', views.HatDetail.as_view(), name='hats_detail'),
+    path('hats/<int:pk>/update/', views.HatUpdate.as_view(), name='hats_update'),
+    path('hats/<int:pk>/delete/', views.HatDelete.as_view(), name='hats_delete'),
 ]
