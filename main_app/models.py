@@ -69,3 +69,11 @@ class Feeding(models.Model):
     class Meta:
         # Sort Feedings by date (descending order)
         ordering = ['-date']
+
+
+class Photo(models.Model):
+    url = models.CharField(max_length=200)
+    penguin = models.ForeignKey(Penguin, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"Photo for penguin_id: {self.penguin_id} @{self.url}"

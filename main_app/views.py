@@ -1,3 +1,6 @@
+import os # used to access .env variables
+import uuid # helpful for generating random strings
+import boto3 # AWS SDK python library
 from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView, DetailView
@@ -5,7 +8,7 @@ from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required # Authorization for view functions
 from django.contrib.auth.mixins import LoginRequiredMixin # Authorization for class based views
-from .models import Penguin, Hat
+from .models import Penguin, Hat, Photo
 from .forms import FeedingForm
 
 # Create your views here.
@@ -123,3 +126,22 @@ def signup(request):
         'form': form,
         'error_message': error_message
     })
+
+@login_required
+def add_photo(request, penguin_id):
+    # photo_file will be set to the name attribute on the input type="file"
+    photo_file = request.FILES.get('photo-file', None)
+    if photo_file:
+        s3 = boto3.client('s3')
+        # creates unique filename with 6 characters & keeps file extension
+        key = uuid.uuid4().hex[:6] + photo_file.name[photo_file.name.rfind('.'):]
+        try:
+            bucket = os.environ['S3_BUCKET']
+            s3.upload_fileobj(photo_file, bucket, key)
+            # builds url string
+            url = f"{os.environ['S3_BASE_URL']}{bucket}/{key}"
+            Photo.objects.create(url=url, penguin_id=penguin_id)
+        except Exception as e:
+            print('An error occured uploading file to S3')
+            print(e)
+    return redirect('penguins_detail', penguin_id=penguin_id)
