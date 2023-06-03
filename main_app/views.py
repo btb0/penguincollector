@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from .models import Penguin
+from django.views.generic import ListView, DetailView
+from .models import Penguin, Hat
 from .forms import FeedingForm
 
 # Create your views here.
@@ -47,3 +48,15 @@ class PenguinUpdate(UpdateView):
 class PenguinDelete(DeleteView):
     model = Penguin
     success_url = '/penguins'
+
+
+# HATS CBVs
+class HatList(ListView):
+    model = Hat
+
+class HatCreate(CreateView):
+    model = Hat
+    fields = '__all__'
+
+class HatDetail(DetailView):
+    model = Hat

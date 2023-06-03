@@ -10,4 +10,7 @@ urlpatterns = [
     path('penguins/<int:pk>/update/', views.PenguinUpdate.as_view(), name='penguins_update'),
     path('penguins/<int:pk>/delete/', views.PenguinDelete.as_view(), name='penguins_delete'),
     path('penguins/<int:penguin_id>/add_feeding/', views.add_feeding, name='add_feeding'),
+    path('hats/', views.HatList.as_view(), name='hats_index'),
+    path('hats/create/', views.HatCreate.as_view(), name='hats_create'),
+    path('hats/<int:pk>', views.HatDetail.as_view(), name='hats_detail'),
 ]
