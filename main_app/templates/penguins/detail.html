@@ -71,7 +71,11 @@
                 <div class="card">
                     <div class="card-content">
                         <span class="card-title">
-                            A <span style="color: {{ hat.color }}">{{ hat.color }}</span> {{ hat.type }}
+                            {% if hat.color|lower == "white" %}
+                                A {{ hat.color }} {{ hat.type }}
+                            {% else %}
+                                A <span style="color: {{ hat.color }}">{{ hat.color }}</span> {{ hat.type }}
+                            {% endif %}
                         </span>
                     </div>
                     <div class="card-action">
@@ -93,7 +97,11 @@
                 <div class="card">
                     <div class="card-content">
                         <span class="card-title">
-                            A <span style="color: {{ hat.color }}">{{ hat.color }}</span> {{ hat.type }}
+                            {% if hat.color|lower == "white" %}
+                                A {{ hat.color }} {{ hat.type }}
+                            {% else %}
+                                A <span style="color: {{ hat.color }}">{{ hat.color }}</span> {{ hat.type }}
+                            {% endif %}
                         </span>
                     </div>
                     <div class="card-action">
