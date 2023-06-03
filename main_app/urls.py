@@ -17,4 +17,5 @@ urlpatterns = [
     path('hats/<int:pk>', views.HatDetail.as_view(), name='hats_detail'),
     path('hats/<int:pk>/update/', views.HatUpdate.as_view(), name='hats_update'),
     path('hats/<int:pk>/delete/', views.HatDelete.as_view(), name='hats_delete'),
+    path('accounts/signup/', views.signup, name='signup'),
 ]

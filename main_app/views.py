@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView, DetailView
+from django.contrib.auth import login
+from django.contrib.auth.forms import UserCreationForm
 from .models import Penguin, Hat
 from .forms import FeedingForm
 
@@ -45,6 +47,13 @@ class PenguinCreate(CreateView):
     model = Penguin
     fields = '__all__'
 
+    # overriding inherited method (called when a valid penguin form is submitted)
+    def form_valid(self, form):
+        # Assign the logged in user (self.request.user)
+        # form.instance is the penguin.
+        form.instance.user = self.request.user 
+        return super().form_valid(form)
+
 class PenguinUpdate(UpdateView):
     model = Penguin
     # Not allowed to update the name
@@ -85,3 +94,24 @@ def unassoc_hat(request, penguin_id, hat_id):
     # remove hat from penguins collection
     Penguin.objects.get(id=penguin_id).hats.remove(hat_id)
     return redirect('penguins_detail', penguin_id=penguin_id)
+
+
+def signup(request):
+    error_message = ''
+    if request.method == 'POST':
+        # creates a 'user' form object including data from browser
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            # save user to db
+            user = form.save()
+            # automatically login user after signup
+            login(request, user)
+            return redirect('penguins_index')
+        else:
+            error_message = 'Invalid sign up. Please try again.'
+    # Either a GET request or bad POST request - render signup.html with empty form
+    form = UserCreationForm()
+    return render(request, 'registration/signup.html', {
+        'form': form,
+        'error_message': error_message
+    })
