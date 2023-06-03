@@ -19,11 +19,16 @@ def penguins_index(request):
 
 def penguins_detail(request, penguin_id):
     penguin = Penguin.objects.get(id=penguin_id)
+    # list of all hats penguin has
+    id_list = penguin.hats.all().values_list('id')
+    # Query for hats with an id not included in id_list (w/ exclude method)
+    avail_hats = Hat.objects.exclude(id__in=id_list)
     # instantiates FeedingForm to be rendered in the detail template
     feeding_form = FeedingForm()
     return render(request, 'penguins/detail.html', {
         'penguin': penguin,
-        'feeding_form': feeding_form
+        'feeding_form': feeding_form,
+        'hats': avail_hats
     })
 
 def add_feeding(request, penguin_id):
@@ -34,7 +39,7 @@ def add_feeding(request, penguin_id):
         new_feeding.save()
     return redirect('penguins_detail', penguin_id=penguin_id)
 
-# ====Class Based Views====
+# ==== Penguin Class Based Views====
 
 class PenguinCreate(CreateView):
     model = Penguin
@@ -68,3 +73,15 @@ class HatUpdate(UpdateView):
 class HatDelete(DeleteView):
     model = Hat
     success_url = '/hats'
+
+
+def assoc_hat(request, penguin_id, hat_id):
+    # Add hat to penguins collection
+    Penguin.objects.get(id=penguin_id).hats.add(hat_id)
+    return redirect('penguins_detail', penguin_id=penguin_id)
+
+
+def unassoc_hat(request, penguin_id, hat_id):
+    # remove hat from penguins collection
+    Penguin.objects.get(id=penguin_id).hats.remove(hat_id)
+    return redirect('penguins_detail', penguin_id=penguin_id)
